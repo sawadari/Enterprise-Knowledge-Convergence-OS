@@ -1,0 +1,33 @@
+{
+  "name": "ekc-root",
+  "version": "1.0.0",
+  "description": "EKC - Enterprise Knowledge Convergence OS",
+  "private": true,
+  "workspaces": [
+    "packages/core",
+    "packages/gtwr",
+    "packages/intent-engine",
+    "packages/criteria-engine",
+    "packages/profile-compiler",
+    "apps/web-ui",
+    "apps/vscode-extension"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "build:core": "npm run build -w @ekc/core",
+    "build:web": "npm run build -w ekc-web-ui",
+    "build:vscode": "npm run compile -w ekc-vscode",
+    "test": "npm run test --workspaces --if-present",
+    "dev:web": "npm run dev -w ekc-web-ui",
+    "clean": "npm run clean --workspaces --if-present && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.9.3",
+    "prettier": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

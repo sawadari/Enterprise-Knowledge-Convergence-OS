@@ -1,0 +1,197 @@
+# GraphLint Automotive Profile - ISO 26262 Schema
+# Version: 2.0.0
+#
+# ISO 26262: Road vehicles — Functional safety
+# Automotive Safety Integrity Level (ASIL): A, B, C, D
+# Safety lifecycle phases
+
+node_kinds:
+  # Part 3: Concept Phase
+  - ItemDefinition
+  - HazardAnalysisRiskAssessment  # HARA
+  - SafetyGoal
+  - FunctionalSafetyConcept
+
+  # Part 4: Product Development - System Level
+  - TechnicalSafetyRequirement    # TSR
+  - TechnicalSafetyConcept        # TSC
+  - SystemDesign
+  - SafetyAnalysis
+
+  # Part 5: Product Development - Hardware Level
+  - HardwareSafetyRequirement     # HSR
+  - HardwareDesign
+  - HardwareSafetyAnalysis
+
+  # Part 6: Product Development - Software Level
+  - SoftwareSafetyRequirement     # SSR
+  - SoftwareArchitecturalDesign
+  - SoftwareUnitDesign
+  - SoftwareUnit
+
+  # Part 8: Supporting Processes
+  - SafetyCase
+  - SafetyPlan
+  - VerificationReport
+  - ValidationReport
+  - AssessmentReport
+
+edge_kinds:
+  # Traceability
+  - derivedFrom      # TSR -> SafetyGoal, HSR -> TSR, SSR -> TSR
+  - refines          # More specific safety requirement
+  - allocatesTo      # TSR -> HW/SW, SafetyGoal -> TSR
+  - verifies         # VerificationReport -> Requirement
+  - validates        # ValidationReport -> SafetyGoal
+  - mitigates        # SafetyGoal -> Hazard
+  - decomposes       # Parent -> Child (hierarchical)
+  - implements       # Design -> Requirement
+
+edge_definitions:
+  derivedFrom:
+    from:
+      - TechnicalSafetyRequirement
+      - HardwareSafetyRequirement
+      - SoftwareSafetyRequirement
+      - FunctionalSafetyConcept
+    to:
+      - SafetyGoal
+      - TechnicalSafetyRequirement
+      - HardwareSafetyRequirement
+    cardinality: "1..*"
+    semantics: "Traceability from refined requirements to source safety goals/requirements"
+
+  refines:
+    from:
+      - TechnicalSafetyRequirement
+      - HardwareSafetyRequirement
+      - SoftwareSafetyRequirement
+    to:
+      - SafetyGoal
+      - TechnicalSafetyRequirement
+      - HardwareSafetyRequirement
+    cardinality: "0..*"
+    semantics: "Refinement relationship (more detailed specification)"
+
+  allocatesTo:
+    from:
+      - TechnicalSafetyRequirement
+      - SafetyGoal
+    to:
+      - HardwareSafetyRequirement
+      - SoftwareSafetyRequirement
+      - SystemDesign
+    cardinality: "1..*"
+    semantics: "Allocation to hardware or software elements"
+
+  verifies:
+    from:
+      - VerificationReport
+    to:
+      - TechnicalSafetyRequirement
+      - HardwareSafetyRequirement
+      - SoftwareSafetyRequirement
+    cardinality: "1..*"
+    semantics: "Verification evidence for requirements"
+
+  validates:
+    from:
+      - ValidationReport
+    to:
+      - SafetyGoal
+      - FunctionalSafetyConcept
+    cardinality: "1..*"
+    semantics: "Validation evidence for safety goals"
+
+  mitigates:
+    from:
+      - SafetyGoal
+    to:
+      - HazardAnalysisRiskAssessment
+    cardinality: "1..*"
+    semantics: "Safety goal mitigates identified hazard"
+
+  decomposes:
+    from:
+      - SafetyGoal
+      - TechnicalSafetyRequirement
+      - SystemDesign
+    to:
+      - SafetyGoal
+      - TechnicalSafetyRequirement
+      - HardwareSafetyRequirement
+      - SoftwareSafetyRequirement
+    cardinality: "0..*"
+    semantics: "Hierarchical decomposition"
+
+  implements:
+    from:
+      - SystemDesign
+      - HardwareDesign
+      - SoftwareArchitecturalDesign
+      - SoftwareUnitDesign
+      - SoftwareUnit
+    to:
+      - TechnicalSafetyRequirement
+      - HardwareSafetyRequirement
+      - SoftwareSafetyRequirement
+    cardinality: "1..*"
+    semantics: "Design/implementation realizes requirement"
+
+# Attribute definitions for ISO 26262
+attribute_catalog:
+  asil:
+    type: enum
+    values: [QM, A, B, C, D]
+    description: "Automotive Safety Integrity Level"
+
+  safety_mechanism:
+    type: string
+    description: "Description of safety mechanism (e.g., watchdog, redundancy)"
+
+  failure_mode:
+    type: string
+    description: "Potential failure mode addressed"
+
+  verification_method:
+    type: enum
+    values: [test, analysis, inspection, review]
+    description: "Verification method (Part 8)"
+
+  validation_method:
+    type: enum
+    values: [vehicle_test, simulation, analysis]
+    description: "Validation method"
+
+  work_product_status:
+    type: enum
+    values: [draft, review, approved, released]
+    description: "ISO 26262 work product status"
+
+  lifecycle_phase:
+    type: enum
+    values: [concept, system, hardware, software, integration, validation]
+    description: "ISO 26262 lifecycle phase"
+
+  decomposition_rationale:
+    type: string
+    description: "Rationale for requirement decomposition (Part 4, 5, 6)"
+
+  hardware_metrics:
+    type: object
+    properties:
+      spfm:
+        type: number
+        description: "Single-Point Fault Metric (%)"
+      lhm:
+        type: number
+        description: "Latent Fault Metric (%)"
+      pmhf:
+        type: number
+        description: "Probabilistic Metric for random HW failures (1/h)"
+    description: "Hardware architectural metrics (Part 5)"
+
+  software_tool_confidence:
+    type: enum
+    values: [TCL1, TCL2, TCL3]
+    description: "Tool Confidence Level (Part 8, Clause 11)"

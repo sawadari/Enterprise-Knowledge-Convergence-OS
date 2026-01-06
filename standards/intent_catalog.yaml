@@ -1,0 +1,381 @@
+# GraphLint Intent Catalog
+# Version: 2.0.0
+# Defines all allowed user intentions (operations) on the knowledge graph
+
+version: "2.0.0"
+
+meta:
+  name: "GraphLint Intent Catalog"
+  purpose: |
+    Intent-driven editing: Users don't edit SSoT directly.
+    Instead, they issue Intents that are validated and executed.
+    This provides safety, traceability, and enables AI-driven collaboration.
+
+collaboration_modes:
+  - id: "autonomous"
+    description: "AI Agent generates and executes intents automatically"
+    approval: "post-execution (with undo)"
+
+  - id: "copilot"
+    description: "AI suggests intents, human approves before execution"
+    approval: "pre-execution"
+
+  - id: "manual"
+    description: "Human generates intents explicitly via UI"
+    approval: "immediate execution"
+
+intents:
+  # Basic graph operations
+  - id: I.AddNode
+    title: "Add node"
+    scope: graph
+    category: create
+    parameters:
+      kind:
+        type: NodeKind
+        required: true
+        description: "Type of node to create"
+      attrs:
+        type: object
+        required: false
+        description: "Initial attributes (must match schema)"
+    returns:
+      node_id: string
+    validation:
+      - "kind must exist in effective_schema.node_kinds"
+      - "attrs keys must match required_attrs in schema"
+
+  - id: I.AddEdge
+    title: "Add edge"
+    scope: graph
+    category: create
+    parameters:
+      from_ref:
+        type: NodeRef
+        required: true
+        description: "Source node ID"
+      edge_kind:
+        type: EdgeKind
+        required: true
+        description: "Type of edge to create"
+      to_ref:
+        type: NodeRef
+        required: true
+        description: "Target node ID"
+      attrs:
+        type: object
+        required: false
+        description: "Edge attributes"
+    returns:
+      edge_id: string
+    validation:
+      - "from_ref node must exist"
+      - "to_ref node must exist"
+      - "edge_kind must exist in effective_schema.edge_kinds"
+      - "from_ref.kind must be in edge_definitions[edge_kind].from"
+      - "to_ref.kind must be in edge_definitions[edge_kind].to"
+
+  - id: I.UpdateNodeAttrs
+    title: "Update node attributes"
+    scope: graph
+    category: update
+    parameters:
+      node_ref:
+        type: NodeRef
+        required: true
+        description: "Node ID to update"
+      patch:
+        type: JsonPatch
+        required: true
+        description: "JSON Patch operations (RFC 6902)"
+    validation:
+      - "node_ref must exist"
+      - "patch operations must be valid JSON Patch"
+      - "resulting attrs must satisfy schema constraints"
+
+  - id: I.UpdateEdgeAttrs
+    title: "Update edge attributes"
+    scope: graph
+    category: update
+    parameters:
+      from_ref:
+        type: NodeRef
+        required: true
+      edge_kind:
+        type: EdgeKind
+        required: true
+      to_ref:
+        type: NodeRef
+        required: true
+      patch:
+        type: JsonPatch
+        required: true
+    validation:
+      - "edge must exist"
+      - "patch operations must be valid"
+
+  - id: I.DeleteNode
+    title: "Delete node"
+    scope: graph
+    category: delete
+    parameters:
+      node_ref:
+        type: NodeRef
+        required: true
+      cascade:
+        type: boolean
+        required: false
+        default: false
+        description: "If true, delete connected edges"
+    validation:
+      - "node_ref must exist"
+      - "if cascade=false, node must have no connected edges"
+
+  - id: I.DeleteEdge
+    title: "Delete edge"
+    scope: graph
+    category: delete
+    parameters:
+      from_ref:
+        type: NodeRef
+        required: true
+      edge_kind:
+        type: EdgeKind
+        required: true
+      to_ref:
+        type: NodeRef
+        required: true
+    validation:
+      - "edge must exist"
+
+  - id: I.ToggleEdge
+    title: "Toggle edge existence"
+    scope: graph
+    category: update
+    parameters:
+      from_ref:
+        type: NodeRef
+        required: true
+      edge_kind:
+        type: EdgeKind
+        required: true
+      to_ref:
+        type: NodeRef
+        required: true
+    description: "Add edge if not exists, delete if exists. Useful for UI toggles."
+    validation:
+      - "nodes must exist"
+      - "edge_kind must be valid for these node types"
+
+  # NRVV-specific intents
+  - id: I.AddNeed
+    title: "Add Need"
+    scope: nrvv
+    category: create
+    parameters:
+      attrs:
+        type: object
+        required: true
+        description: "Need attributes (stakeholder_ref, lifecycle_context, etc)"
+      expressed_by:
+        type: NodeRef
+        required: false
+        description: "Stakeholder node ref (auto-creates expresses edge)"
+    returns:
+      need_id: string
+    validation:
+      - "attrs must include all required_attrs for Need"
+      - "stakeholder_ref must reference existing Stakeholder"
+    post_action:
+      - "if expressed_by is provided, create expresses edge"
+
+  - id: I.AddRequirementRefinement
+    title: "Add Requirement (refinesTo from Need)"
+    scope: nrvv
+    category: create
+    parameters:
+      need_ref:
+        type: NodeRef
+        required: true
+        description: "Need that this Requirement refines"
+      requirement_attrs:
+        type: object
+        required: true
+        description: "Requirement attributes"
+    returns:
+      requirement_id: string
+    validation:
+      - "need_ref must exist and be a Need"
+      - "requirement_attrs must include all required_attrs for Requirement"
+    post_action:
+      - "create Requirement node"
+      - "create refinesTo edge from Need to Requirement"
+
+  - id: I.AddValidationQuestion
+    title: "Add ValidationQuestion (hasValidationQuestion from Need)"
+    scope: nrvv
+    category: create
+    parameters:
+      need_ref:
+        type: NodeRef
+        required: true
+      question_attrs:
+        type: object
+        required: true
+    returns:
+      validation_question_id: string
+    validation:
+      - "need_ref must exist and be a Need"
+    post_action:
+      - "create ValidationQuestion node"
+      - "create hasValidationQuestion edge from Need to ValidationQuestion"
+
+  - id: I.AttachValidationEvidence
+    title: "Attach ValidationEvidence (supportedBy from ValidationQuestion)"
+    scope: nrvv
+    category: create
+    parameters:
+      validation_question_ref:
+        type: NodeRef
+        required: true
+      evidence_attrs:
+        type: object
+        required: true
+    returns:
+      validation_evidence_id: string
+    post_action:
+      - "create ValidationEvidence node"
+      - "create supportedBy edge from ValidationQuestion to ValidationEvidence"
+
+  - id: I.RequestAgreement
+    title: "Request/Record Agreement"
+    scope: approval
+    category: create
+    parameters:
+      target_ref:
+        type: NodeRef
+        required: true
+        description: "What is being approved"
+      agreement_attrs:
+        type: object
+        required: true
+        description: "Agreement attributes (scope, decision, approver_ref, etc)"
+    returns:
+      agreement_id: string
+    validation:
+      - "target_ref must exist"
+      - "agreement_attrs.approver_ref must reference existing Stakeholder"
+      - "agreement_attrs.scope must be in [baseline, delta, exception]"
+    post_action:
+      - "create Agreement node"
+      - "create approves edge from Agreement to target"
+
+  - id: I.PromoteValidationHintToQuestion
+    title: "Promote Need.validation_hint to ValidationQuestion"
+    scope: nrvv
+    category: transform
+    parameters:
+      need_ref:
+        type: NodeRef
+        required: true
+    description: "Converts validation_hint attribute to formal ValidationQuestion node"
+    validation:
+      - "need_ref must exist and be a Need"
+      - "Need must have validation_hint attribute"
+    post_action:
+      - "create ValidationQuestion with question = Need.validation_hint"
+      - "create hasValidationQuestion edge"
+      - "remove validation_hint attribute from Need"
+
+  # AI-driven intents
+  - id: I.SuggestRequirements
+    title: "AI: Suggest Requirements from Need"
+    scope: ai
+    category: suggest
+    parameters:
+      need_ref:
+        type: NodeRef
+        required: true
+    returns:
+      suggestions: array of requirement_attrs
+    description: "AI analyzes Need and suggests concrete Requirements"
+    ai_model: "claude-sonnet-4"
+
+  - id: I.ExtractNodesFromText
+    title: "AI: Extract nodes from natural language"
+    scope: ai
+    category: extract
+    parameters:
+      text:
+        type: string
+        required: true
+      context_hint:
+        type: string
+        required: false
+        description: "Hint about expected node types"
+    returns:
+      extracted_nodes: array of {kind, attrs, confidence}
+    description: "Uses graphlint-parser to extract nodes from text"
+
+  - id: I.ExtractEdgesFromText
+    title: "AI: Extract edges from natural language"
+    scope: ai
+    category: extract
+    parameters:
+      text:
+        type: string
+        required: true
+      existing_nodes:
+        type: array
+        required: true
+        description: "Nodes to consider for edge extraction"
+    returns:
+      extracted_edges: array of {from, to, kind, confidence}
+    description: "Uses graphlint-suggest to extract relationships"
+
+  - id: I.EstimateNodeType
+    title: "AI: Estimate node type from content"
+    scope: ai
+    category: suggest
+    parameters:
+      node_content:
+        type: string
+        required: true
+      candidate_kinds:
+        type: array
+        required: false
+        description: "Limit to these node kinds"
+    returns:
+      estimated_kind: string
+      confidence: number
+    description: "Uses graphlint-suggest node type estimator"
+
+# Intent execution model
+execution_model:
+  steps:
+    - validate_intent: "Check intent parameters against catalog"
+    - validate_pre_conditions: "Check pre-conditions (nodes exist, schema valid)"
+    - execute: "Perform the operation on SSoT"
+    - validate_post_conditions: "Ensure SSoT is still valid"
+    - record_history: "Log intent execution to history/"
+    - evaluate_criteria: "Run quality criteria if needed"
+
+  rollback:
+    - "If any step fails, rollback all changes"
+    - "History preserves failed attempts for debugging"
+
+  collaboration_mode_behavior:
+    autonomous:
+      - "Agent generates intent"
+      - "Execute immediately"
+      - "User can undo from history"
+
+    copilot:
+      - "Agent generates intent"
+      - "Show preview to user"
+      - "Wait for approval"
+      - "Execute after approval"
+
+    manual:
+      - "User generates intent via UI"
+      - "Execute immediately"

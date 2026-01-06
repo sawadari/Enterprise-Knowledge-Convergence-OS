@@ -1,0 +1,51 @@
+# GraphLint Profile Configuration
+# Version: 2.0.0
+# This file defines which schemas and extensions are active
+
+profile:
+  name: "GraphLint Base + NRVV"
+  version: "2.0.0"
+  purpose: |
+    Defines the active vocabulary for GraphLint.
+    UI/Query/Lint must use standards/compiled/effective_schema.yaml as SSoT.
+
+  includes:
+    - "standards/schema.yaml"                    # Core minimal schema
+    - "standards/syseng_core_schema.yaml"        # SysEng basics (decompose, trace, etc)
+    - "standards/nrvv_needs_schema.yaml"         # NRVV Needs layer
+    - "standards/nrvv_vv_schema.yaml"            # NRVV V&V layer
+
+  outputs:
+    effective_schema: "standards/compiled/effective_schema.yaml"
+    effective_dictionary: "standards/compiled/effective_dictionary.yaml"
+    effective_query_ui_palette: "standards/compiled/effective_query_ui_palette.yaml"
+    effective_attribute_value_catalog: "standards/compiled/effective_attribute_value_catalog.yaml"
+
+  ui:
+    query_ui_palette:
+      base: "standards/query_ui_palette.yaml"
+      overlays: []
+      output: "standards/compiled/effective_query_ui_palette.yaml"
+
+    attribute_value_catalog:
+      base: "standards/attribute_value_catalog.yaml"
+      overlays: []
+      output: "standards/compiled/effective_attribute_value_catalog.yaml"
+
+  evaluation:
+    quality_gates:
+      base: "checks/quality_gates.yaml"
+      profiles: []
+
+  compilation_rules:
+    - "node kind / edge kind collisions are forbidden (no overwrite)"
+    - "edge definitions must reference known node kinds"
+    - "Any ref_kind is exempt from existence checks"
+    - "effective_schema merges: core schema + schema extensions + profile packs"
+
+  collaboration:
+    default_mode: "copilot"
+    modes:
+      - autonomous: "AI executes intents automatically"
+      - copilot: "AI suggests, human approves"
+      - manual: "Human explicitly issues intents"

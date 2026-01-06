@@ -1,0 +1,170 @@
+version: 2.0.0
+source_profile: standards/profile.yaml
+note:
+  - Generated file (checked-in). Do not edit by hand.
+  - UI/Query/Lint MUST treat this file as the effective vocabulary SSoT.
+generated_from:
+  includes:
+    - standards/schema.yaml
+    - standards/syseng_core_schema.yaml
+    - standards/nrvv_needs_schema.yaml
+    - standards/nrvv_vv_schema.yaml
+node_kinds:
+  - Agreement
+  - Block
+  - Component
+  - ConOps
+  - Function
+  - Need
+  - OpsCon
+  - Port
+  - Requirement
+  - Stakeholder
+  - ValidationEvidence
+  - ValidationQuestion
+  - VerificationCase
+edge_kinds:
+  - allocate
+  - approves
+  - connect
+  - contextualizes
+  - decompose
+  - expresses
+  - hasPort
+  - hasValidationQuestion
+  - partOf
+  - refinesTo
+  - supportedBy
+  - trace
+  - verifies
+edge_definitions:
+  allocate:
+    from:
+      - Function
+    to:
+      - Component
+      - Block
+    cardinality: 0..*
+    semantics: Function → Structure allocation (Function → Component/Block)
+    note: Maps functional architecture to physical architecture
+  approves:
+    from:
+      - Agreement
+    to:
+      - Need
+      - Requirement
+      - ValidationQuestion
+      - VerificationCase
+    cardinality: 0..*
+    semantics: Agreement approves target artifact
+    note: This is a derived edge in EKC-OS, computed from Agreement.target_ref
+  connect:
+    from:
+      - Port
+    to:
+      - Port
+    cardinality: 0..*
+    semantics: Port-to-port connection (Port → Port)
+    note: Represents interface connections
+  contextualizes:
+    from:
+      - ConOps
+      - OpsCon
+    to:
+      - Need
+    cardinality: 0..*
+    semantics: Context document provides context for Need
+  decompose:
+    from:
+      - Block
+      - Component
+      - Function
+    to:
+      - Block
+      - Component
+      - Function
+    cardinality: 0..*
+    semantics: Hierarchical decomposition (parent → child)
+    note: Used for hierarchical breakdown of system elements
+  expresses:
+    from:
+      - Stakeholder
+    to:
+      - Need
+    cardinality: 0..*
+    semantics: Stakeholder expresses a Need
+  hasPort:
+    from:
+      - Block
+      - Component
+      - Function
+    to:
+      - Port
+    cardinality: 0..*
+    semantics: Ownership relationship from container to port
+  hasValidationQuestion:
+    from:
+      - Need
+    to:
+      - ValidationQuestion
+    cardinality: 0..*
+    semantics: Need has a validation question to be answered
+  partOf:
+    from:
+      - Port
+      - Block
+      - Component
+    to:
+      - Block
+      - Component
+    cardinality: 0..*
+    semantics: Containment/belonging (part → whole)
+    note: Inverse of composition relationship
+  refinesTo:
+    from:
+      - Need
+    to:
+      - Requirement
+    cardinality: 0..*
+    semantics: T1 standard (Why -> What). Need refines into concrete Requirement.
+    note: This is the fundamental traceability link in NRVV
+  supportedBy:
+    from:
+      - ValidationQuestion
+    to:
+      - ValidationEvidence
+    cardinality: 0..*
+    semantics: ValidationQuestion is supported by ValidationEvidence
+  trace:
+    from:
+      - Need
+      - Requirement
+      - ValidationQuestion
+      - VerificationCase
+      - ValidationEvidence
+      - Agreement
+      - Function
+      - Component
+      - Block
+      - Port
+    to:
+      - Need
+      - Requirement
+      - ValidationQuestion
+      - VerificationCase
+      - ValidationEvidence
+      - Agreement
+      - Function
+      - Component
+      - Block
+      - Port
+    cardinality: 0..*
+    semantics: Generic trace (1-hop, semantics defined by dictionary/usage)
+    note: Generic traceability link when specific relationship is not defined
+  verifies:
+    from:
+      - VerificationCase
+    to:
+      - Requirement
+    cardinality: 0..*
+    semantics: VerificationCase verifies that Requirement is correctly implemented

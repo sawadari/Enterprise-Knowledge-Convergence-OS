@@ -1,0 +1,118 @@
+# GraphLint NRVV Verification & Validation Schema Extension
+# Version: 2.0.0
+# Implements Verification and Validation layers of NRVV
+
+nrvv_vv_schema:
+  name: "NRVV Verification & Validation Schema Extension"
+  version: "2.0.0"
+  purpose: |
+    Verification: "Are we building the system right?" (against Requirements)
+    Validation: "Are we building the right system?" (against Needs)
+
+  node_kinds_extension:
+    VerificationCase:
+      description: "Test case or verification activity to verify a Requirement"
+      required_attrs:
+        method:
+          type: "enum"
+          values: ["test", "analysis", "inspection", "demonstration"]
+          description: "TAID verification method"
+        pass_criteria:
+          type: "string"
+          description: "Criteria for passing this verification"
+        status:
+          type: "enum"
+          values: ["planned", "in_progress", "passed", "failed", "blocked"]
+          description: "Current status of verification"
+      optional_attrs:
+        test_procedure_ref:
+          type: "anchor_ref"
+          description: "Reference to detailed test procedure"
+        actual_result:
+          type: "string"
+          description: "Actual result from verification execution"
+
+    ValidationQuestion:
+      description: "Question to be answered to validate a Need"
+      required_attrs:
+        question:
+          type: "string"
+          description: "The validation question"
+        rationale:
+          type: "string"
+          description: "Why this question is important"
+      optional_attrs:
+        status:
+          type: "enum"
+          values: ["open", "answered", "deferred"]
+          description: "Status of this validation question"
+
+    ValidationEvidence:
+      description: "Evidence supporting answer to ValidationQuestion"
+      required_attrs:
+        evidence_type:
+          type: "enum"
+          values: ["document", "prototype", "user_feedback", "analysis", "simulation"]
+          description: "Type of evidence"
+        description:
+          type: "string"
+          description: "Description of the evidence"
+        source_anchor:
+          type: "anchor_ref"
+          description: "Reference to the evidence artifact"
+      optional_attrs:
+        confidence:
+          type: "number"
+          range: [0, 1]
+          description: "Confidence in this evidence"
+
+    Agreement:
+      description: "Formal approval or agreement record"
+      required_attrs:
+        scope:
+          type: "enum"
+          values: ["baseline", "delta", "exception"]
+          description: "Scope of agreement"
+        decision:
+          type: "enum"
+          values: ["approved", "rejected", "deferred", "conditional"]
+          description: "Decision made"
+        approver_ref:
+          type: "ref"
+          ref_kind: "Stakeholder"
+          description: "Who approved"
+        timestamp:
+          type: "datetime"
+          description: "When approved"
+      optional_attrs:
+        conditions:
+          type: "string"
+          description: "Conditions for conditional approval"
+        rationale:
+          type: "string"
+          description: "Reasoning for the decision"
+
+  edge_kinds_extension:
+    verifies:
+      from: "VerificationCase"
+      to: "Requirement"
+      semantics: "VerificationCase verifies that Requirement is correctly implemented"
+      cardinality: "0..*"
+
+    supportedBy:
+      from: "ValidationQuestion"
+      to: "ValidationEvidence"
+      semantics: "ValidationQuestion is supported by ValidationEvidence"
+      cardinality: "0..*"
+
+    approves:
+      from: "Agreement"
+      to: ["Need", "Requirement", "ValidationQuestion", "VerificationCase"]
+      semantics: "Agreement approves target artifact"
+      cardinality: "0..*"
+      note: "This is a derived edge in EKC-OS, computed from Agreement.target_ref"
+
+  validation_trio:
+    description: "At baseline, each Need must have: ValidationQuestion + ValidationEvidence + Agreement"
+    enforcement: "quality_gate"
+    gate_id: "GATE-BASELINE-NRVV"

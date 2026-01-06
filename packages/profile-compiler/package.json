@@ -1,0 +1,23 @@
+{
+  "name": "@ekc/profile-compiler",
+  "version": "1.0.0",
+  "description": "Profile compilation tool for EKC schemas and criteria",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "ekc-compile-profile": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "keywords": ["ekc", "profile", "compiler", "schema"],
+  "license": "MIT",
+  "dependencies": {
+    "yaml": "^2.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,149 @@
+# GraphLint NRVV Needs Schema Extension
+# Version: 2.0.0
+# Implements Needs layer of NRVV (Needs, Requirements, Verification, Validation)
+
+nrvv_needs_schema:
+  name: "NRVV Needs Schema Extension"
+  version: "2.0.0"
+  purpose: |
+    Defines the Needs layer of NRVV model.
+    Need = Stakeholder expectation (Why)
+    Requirement = Concrete obligation (What)
+
+  decision:
+    need_is_source_of_truth: true
+    note: "Need is the authoritative source for 'Why'. Requirements refine Needs."
+
+  # Extend node kinds with NRVV entities
+  node_kinds_extension:
+    Need:
+      description: "Stakeholder expectation (may be unverifiable). Source of truth for 'Why'."
+      required_attrs:
+        stakeholder_ref:
+          type: "ref"
+          ref_kind: "Stakeholder"
+          description: "Who expressed this need"
+        lifecycle_context:
+          type: "enum"
+          values: ["development", "operation", "maintenance", "disposal"]
+          description: "When in lifecycle this need applies"
+        validation_intent:
+          type: "qualitative"
+          description: "How we will know this need is satisfied (qualitative)"
+        source_anchor:
+          type: "anchor_ref"
+          description: "Reference to original source (doc, meeting, etc)"
+        confidence:
+          type: "number"
+          range: [0, 1]
+          description: "Confidence score (0-1) for this need"
+      optional_attrs:
+        opscon_ref:
+          type: "ref"
+          ref_kind: "OpsCon"
+          description: "Operational concept reference"
+        conops_ref:
+          type: "ref"
+          ref_kind: "ConOps"
+          description: "Concept of operations reference"
+        priority:
+          type: "enum"
+          values: ["must", "should", "could"]
+          description: "MoSCoW priority"
+        risk:
+          type: "enum"
+          values: ["low", "medium", "high"]
+          description: "Risk level if not satisfied"
+        validation_hint:
+          type: "string"
+          allowed_only_if: "initial_PoC"
+          note: "For PoC only. Must promote to ValidationQuestion for production"
+
+    Requirement:
+      description: "Concrete, verifiable obligation (What). Must trace to Need."
+      required_attrs:
+        statement:
+          type: "string"
+          description: "The requirement statement (SHALL/SHOULD/MAY)"
+        rationale:
+          type: "string"
+          description: "Why this requirement exists"
+        acceptance_criteria:
+          type: "string"
+          description: "How to know when this requirement is satisfied"
+        verification_method:
+          type: "enum"
+          values: ["test", "analysis", "inspection", "demonstration"]
+          description: "TAID verification method"
+        source_anchor:
+          type: "anchor_ref"
+          description: "Reference to original source"
+        confidence:
+          type: "number"
+          range: [0, 1]
+          description: "Confidence score (0-1)"
+      optional_attrs:
+        priority:
+          type: "enum"
+          values: ["P0-Critical", "P1-High", "P2-Medium", "P3-Low"]
+        category:
+          type: "enum"
+          values: ["functional", "performance", "safety", "security", "usability"]
+
+    Stakeholder:
+      description: "Person or organization with interests in the system"
+      required_attrs:
+        name:
+          type: "string"
+          description: "Stakeholder name or role"
+        stakeholder_type:
+          type: "enum"
+          values: ["operator", "customer", "maintainer", "regulator", "developer"]
+          description: "Type of stakeholder"
+
+    ConOps:
+      description: "Concept of Operations document"
+      required_attrs:
+        scope:
+          type: "string"
+          description: "Scope of this ConOps"
+        source_anchor:
+          type: "anchor_ref"
+          description: "Reference to ConOps document"
+
+    OpsCon:
+      description: "Operational Concept"
+      required_attrs:
+        scope:
+          type: "string"
+          description: "Scope of this OpsCon"
+        source_anchor:
+          type: "anchor_ref"
+          description: "Reference to OpsCon document"
+
+  # Extend edge kinds with NRVV relationships
+  edge_kinds_extension:
+    expresses:
+      from: "Stakeholder"
+      to: "Need"
+      semantics: "Stakeholder expresses a Need"
+      cardinality: "0..*"
+
+    contextualizes:
+      from: ["ConOps", "OpsCon"]
+      to: "Need"
+      semantics: "Context document provides context for Need"
+      cardinality: "0..*"
+
+    hasValidationQuestion:
+      from: "Need"
+      to: "ValidationQuestion"
+      semantics: "Need has a validation question to be answered"
+      cardinality: "0..*"
+
+    refinesTo:
+      from: "Need"
+      to: "Requirement"
+      semantics: "T1 standard (Why -> What). Need refines into concrete Requirement."
+      cardinality: "0..*"
+      note: "This is the fundamental traceability link in NRVV"

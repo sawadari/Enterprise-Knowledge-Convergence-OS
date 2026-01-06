@@ -1,0 +1,681 @@
+{
+  "meta": {
+    "version": "2.0.0",
+    "profile_version": "2.0.0",
+    "last_updated": "2026-01-06T10:00:00Z",
+    "created_at": "2026-01-06T09:00:00Z",
+    "collaboration_mode": "copilot",
+    "description": "オンライン学習システムの要求管理サンプル - GraphLint EKC-OS デモンストレーション"
+  },
+  "nodes": [
+    {
+      "id": "stakeholder-001",
+      "kind": "Stakeholder",
+      "attrs": {
+        "name": "学生ユーザー",
+        "stakeholder_type": "end_user",
+        "description": "オンライン学習プラットフォームを利用する学生"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:10:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "stakeholder-002",
+      "kind": "Stakeholder",
+      "attrs": {
+        "name": "教育機関管理者",
+        "stakeholder_type": "administrator",
+        "description": "学習コンテンツと受講者を管理する教育機関の担当者"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:10:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "stakeholder-003",
+      "kind": "Stakeholder",
+      "attrs": {
+        "name": "講師",
+        "stakeholder_type": "content_creator",
+        "description": "学習コンテンツを作成・配信する講師"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:10:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "need-001",
+      "kind": "Need",
+      "attrs": {
+        "stakeholder_ref": "stakeholder-001",
+        "lifecycle_context": "学習体験",
+        "validation_intent": "いつでもどこでも自分のペースで学習を進められる",
+        "source_anchor": "要件定義書.md#L15",
+        "confidence": 0.95,
+        "priority": "must",
+        "risk": "medium"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:15:00Z",
+        "created_by": "ai",
+        "confidence": 0.95,
+        "intent_id": "I.AddNeed-2026-01-06-001"
+      }
+    },
+    {
+      "id": "need-002",
+      "kind": "Need",
+      "attrs": {
+        "stakeholder_ref": "stakeholder-001",
+        "lifecycle_context": "学習体験",
+        "validation_intent": "学習進捗を可視化して、モチベーションを維持したい",
+        "source_anchor": "要件定義書.md#L25",
+        "confidence": 0.92,
+        "priority": "should",
+        "risk": "low"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:16:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "need-003",
+      "kind": "Need",
+      "attrs": {
+        "stakeholder_ref": "stakeholder-002",
+        "lifecycle_context": "運用管理",
+        "validation_intent": "受講者の学習状況を一元管理し、適切なサポートを提供したい",
+        "source_anchor": "要件定義書.md#L35",
+        "confidence": 0.98,
+        "priority": "must",
+        "risk": "high"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:17:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "need-004",
+      "kind": "Need",
+      "attrs": {
+        "stakeholder_ref": "stakeholder-003",
+        "lifecycle_context": "コンテンツ作成",
+        "validation_intent": "効果的な学習コンテンツを簡単に作成・更新できる",
+        "source_anchor": "要件定義書.md#L45",
+        "confidence": 0.90,
+        "priority": "should",
+        "risk": "medium"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:18:00Z",
+        "created_by": "ai"
+      }
+    },
+    {
+      "id": "req-001",
+      "kind": "Requirement",
+      "attrs": {
+        "statement": "システムは、PC・タブレット・スマートフォンから24時間365日アクセス可能であること",
+        "rationale": "学生が時間と場所を選ばずに学習できる環境を提供する",
+        "acceptance_criteria": "すべてのデバイスでレスポンシブUIが正常に動作し、99.9%の稼働率を維持する",
+        "verification_method": "test",
+        "source_anchor": "要件定義書.md#L20",
+        "confidence": 0.98,
+        "priority": "P0-Critical",
+        "category": "accessibility"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:20:00Z",
+        "created_by": "ai",
+        "confidence": 0.98,
+        "intent_id": "I.AddRequirementRefinement-2026-01-06-002"
+      }
+    },
+    {
+      "id": "req-002",
+      "kind": "Requirement",
+      "attrs": {
+        "statement": "システムは、動画コンテンツの再生速度を0.5倍〜2.0倍の範囲で調整可能であること",
+        "rationale": "学習者が自分のペースで効率的に学習を進められるようにする",
+        "acceptance_criteria": "動画プレーヤーに速度調整UIが実装され、音声が途切れずに再生される",
+        "verification_method": "test",
+        "source_anchor": "要件定義書.md#L22",
+        "confidence": 0.95,
+        "priority": "P1-High",
+        "category": "usability"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:21:00Z",
+        "created_by": "ai",
+        "confidence": 0.95,
+        "intent_id": "I.AddRequirementRefinement-2026-01-06-003"
+      }
+    },
+    {
+      "id": "req-003",
+      "kind": "Requirement",
+      "attrs": {
+        "statement": "システムは、学習進捗をダッシュボードで可視化すること（完了率、学習時間、達成バッジ）",
+        "rationale": "視覚的なフィードバックで学習者のモチベーションを向上させる",
+        "acceptance_criteria": "ダッシュボードに完了率・累計学習時間・獲得バッジがリアルタイムで表示される",
+        "verification_method": "test",
+        "source_anchor": "要件定義書.md#L28",
+        "confidence": 0.92,
+        "priority": "P1-High",
+        "category": "visualization"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:22:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "req-004",
+      "kind": "Requirement",
+      "attrs": {
+        "statement": "管理者は、受講者ごとの学習進捗・テスト結果をCSVエクスポート可能であること",
+        "rationale": "教育機関が既存の管理システムと連携し、データ分析を行えるようにする",
+        "acceptance_criteria": "管理画面から受講者データをCSV形式でダウンロードでき、必要な項目が含まれている",
+        "verification_method": "test",
+        "source_anchor": "要件定義書.md#L40",
+        "confidence": 0.97,
+        "priority": "P2-Medium",
+        "category": "integration"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:23:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "req-005",
+      "kind": "Requirement",
+      "attrs": {
+        "statement": "講師は、Markdown形式でテキスト教材を作成し、プレビュー確認後に公開できること",
+        "rationale": "技術的な知識がなくても、リッチなコンテンツを簡単に作成できる",
+        "acceptance_criteria": "Markdownエディタ・リアルタイムプレビュー・公開ボタンが実装されている",
+        "verification_method": "inspection",
+        "source_anchor": "要件定義書.md#L48",
+        "confidence": 0.90,
+        "priority": "P2-Medium",
+        "category": "content_creation"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:24:00Z",
+        "created_by": "ai"
+      }
+    },
+    {
+      "id": "verif-001",
+      "kind": "VerificationCase",
+      "attrs": {
+        "method": "test",
+        "pass_criteria": "iPhone/Android/PC各デバイスで正常にアクセスでき、UIが適切にレイアウトされる",
+        "status": "passed",
+        "actual_result": "10種類のデバイスで動作確認完了。すべて正常表示。"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:30:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "verif-002",
+      "kind": "VerificationCase",
+      "attrs": {
+        "method": "test",
+        "pass_criteria": "動画再生速度が0.5倍〜2.0倍で正常に調整でき、音声が途切れない",
+        "status": "passed",
+        "actual_result": "すべての速度設定で音声品質が維持されることを確認"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:31:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "verif-003",
+      "kind": "VerificationCase",
+      "attrs": {
+        "method": "test",
+        "pass_criteria": "ダッシュボードに完了率・学習時間・バッジがリアルタイム表示される",
+        "status": "passed",
+        "actual_result": "コース完了時に即座に進捗が更新されることを確認"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:32:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "val-question-001",
+      "kind": "ValidationQuestion",
+      "attrs": {
+        "question": "学生は実際に「いつでもどこでも学習できる」体験を得られているか？",
+        "rationale": "マルチデバイス対応だけでなく、実際のユーザー体験として便利さが実感されているか検証する",
+        "status": "answered"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:35:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "val-question-002",
+      "kind": "ValidationQuestion",
+      "attrs": {
+        "question": "進捗可視化は学習モチベーション向上に効果があったか？",
+        "rationale": "ダッシュボード機能が実際に継続学習につながっているか検証する",
+        "status": "answered"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:36:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "val-evidence-001",
+      "kind": "ValidationEvidence",
+      "attrs": {
+        "evidence_type": "user_feedback",
+        "description": "ベータユーザー50名へのアンケート: 92%が「場所を選ばず学習できて便利」と回答",
+        "source_anchor": "ユーザーテスト報告書_2026-01.pdf",
+        "confidence": 0.92
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:40:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "val-evidence-002",
+      "kind": "ValidationEvidence",
+      "attrs": {
+        "evidence_type": "analytics",
+        "description": "ダッシュボード実装後、平均学習継続率が65%から78%に向上（13ポイント改善）",
+        "source_anchor": "利用統計_2026-01.csv",
+        "confidence": 0.95
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:41:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "id": "agreement-001",
+      "kind": "Agreement",
+      "attrs": {
+        "scope": "baseline",
+        "decision": "approved",
+        "approver_ref": "stakeholder-002",
+        "timestamp": "2026-01-06T09:50:00Z",
+        "rationale": "学生・管理者・講師すべてのニーズを満たす要件が定義され、検証も完了した"
+      },
+      "metadata": {
+        "created_at": "2026-01-06T09:50:00Z",
+        "created_by": "user"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "stakeholder-001",
+      "kind": "expresses",
+      "to": "need-001",
+      "metadata": {
+        "created_at": "2026-01-06T09:15:00Z",
+        "created_by": "ai"
+      }
+    },
+    {
+      "from": "stakeholder-001",
+      "kind": "expresses",
+      "to": "need-002",
+      "metadata": {
+        "created_at": "2026-01-06T09:16:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "from": "stakeholder-002",
+      "kind": "expresses",
+      "to": "need-003",
+      "metadata": {
+        "created_at": "2026-01-06T09:17:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "from": "stakeholder-003",
+      "kind": "expresses",
+      "to": "need-004",
+      "metadata": {
+        "created_at": "2026-01-06T09:18:00Z",
+        "created_by": "ai"
+      }
+    },
+    {
+      "from": "need-001",
+      "kind": "refinesTo",
+      "to": "req-001",
+      "metadata": {
+        "created_at": "2026-01-06T09:20:00Z",
+        "created_by": "ai",
+        "intent_id": "I.AddRequirementRefinement-2026-01-06-002"
+      }
+    },
+    {
+      "from": "need-001",
+      "kind": "refinesTo",
+      "to": "req-002",
+      "metadata": {
+        "created_at": "2026-01-06T09:21:00Z",
+        "created_by": "ai",
+        "intent_id": "I.AddRequirementRefinement-2026-01-06-003"
+      }
+    },
+    {
+      "from": "need-002",
+      "kind": "refinesTo",
+      "to": "req-003",
+      "metadata": {
+        "created_at": "2026-01-06T09:22:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "from": "need-003",
+      "kind": "refinesTo",
+      "to": "req-004",
+      "metadata": {
+        "created_at": "2026-01-06T09:23:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "from": "need-004",
+      "kind": "refinesTo",
+      "to": "req-005",
+      "metadata": {
+        "created_at": "2026-01-06T09:24:00Z",
+        "created_by": "ai"
+      }
+    },
+    {
+      "from": "verif-001",
+      "kind": "verifies",
+      "to": "req-001",
+      "metadata": {
+        "created_at": "2026-01-06T09:30:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "from": "verif-002",
+      "kind": "verifies",
+      "to": "req-002",
+      "metadata": {
+        "created_at": "2026-01-06T09:31:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "from": "verif-003",
+      "kind": "verifies",
+      "to": "req-003",
+      "metadata": {
+        "created_at": "2026-01-06T09:32:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "from": "need-001",
+      "kind": "hasValidationQuestion",
+      "to": "val-question-001",
+      "metadata": {
+        "created_at": "2026-01-06T09:35:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "from": "need-002",
+      "kind": "hasValidationQuestion",
+      "to": "val-question-002",
+      "metadata": {
+        "created_at": "2026-01-06T09:36:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "from": "val-question-001",
+      "kind": "supportedBy",
+      "to": "val-evidence-001",
+      "metadata": {
+        "created_at": "2026-01-06T09:40:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "from": "val-question-002",
+      "kind": "supportedBy",
+      "to": "val-evidence-002",
+      "metadata": {
+        "created_at": "2026-01-06T09:41:00Z",
+        "created_by": "user"
+      }
+    },
+    {
+      "from": "agreement-001",
+      "kind": "approves",
+      "to": "need-001",
+      "metadata": {
+        "created_at": "2026-01-06T09:50:00Z",
+        "created_by": "user",
+        "is_derived": false
+      }
+    },
+    {
+      "from": "agreement-001",
+      "kind": "approves",
+      "to": "need-002",
+      "metadata": {
+        "created_at": "2026-01-06T09:50:00Z",
+        "created_by": "user",
+        "is_derived": false
+      }
+    },
+    {
+      "from": "agreement-001",
+      "kind": "approves",
+      "to": "need-003",
+      "metadata": {
+        "created_at": "2026-01-06T09:50:00Z",
+        "created_by": "user",
+        "is_derived": false
+      }
+    },
+    {
+      "from": "agreement-001",
+      "kind": "approves",
+      "to": "need-004",
+      "metadata": {
+        "created_at": "2026-01-06T09:50:00Z",
+        "created_by": "user",
+        "is_derived": false
+      }
+    },
+    {
+      "from": "agreement-001",
+      "kind": "approves",
+      "to": "req-001",
+      "metadata": {
+        "created_at": "2026-01-06T09:50:00Z",
+        "created_by": "user",
+        "is_derived": false
+      }
+    },
+    {
+      "from": "agreement-001",
+      "kind": "approves",
+      "to": "req-002",
+      "metadata": {
+        "created_at": "2026-01-06T09:50:00Z",
+        "created_by": "user",
+        "is_derived": false
+      }
+    },
+    {
+      "from": "agreement-001",
+      "kind": "approves",
+      "to": "req-003",
+      "metadata": {
+        "created_at": "2026-01-06T09:50:00Z",
+        "created_by": "user",
+        "is_derived": false
+      }
+    },
+    {
+      "from": "agreement-001",
+      "kind": "approves",
+      "to": "req-004",
+      "metadata": {
+        "created_at": "2026-01-06T09:50:00Z",
+        "created_by": "user",
+        "is_derived": false
+      }
+    },
+    {
+      "from": "agreement-001",
+      "kind": "approves",
+      "to": "req-005",
+      "metadata": {
+        "created_at": "2026-01-06T09:50:00Z",
+        "created_by": "user",
+        "is_derived": false
+      }
+    }
+  ],
+  "indexes": {
+    "by_kind": {
+      "Stakeholder": ["stakeholder-001", "stakeholder-002", "stakeholder-003"],
+      "Need": ["need-001", "need-002", "need-003", "need-004"],
+      "Requirement": ["req-001", "req-002", "req-003", "req-004", "req-005"],
+      "VerificationCase": ["verif-001", "verif-002", "verif-003"],
+      "ValidationQuestion": ["val-question-001", "val-question-002"],
+      "ValidationEvidence": ["val-evidence-001", "val-evidence-002"],
+      "Agreement": ["agreement-001"]
+    },
+    "outgoing_edges": {
+      "stakeholder-001": [
+        {"from": "stakeholder-001", "kind": "expresses", "to": "need-001"},
+        {"from": "stakeholder-001", "kind": "expresses", "to": "need-002"}
+      ],
+      "stakeholder-002": [
+        {"from": "stakeholder-002", "kind": "expresses", "to": "need-003"}
+      ],
+      "stakeholder-003": [
+        {"from": "stakeholder-003", "kind": "expresses", "to": "need-004"}
+      ],
+      "need-001": [
+        {"from": "need-001", "kind": "refinesTo", "to": "req-001"},
+        {"from": "need-001", "kind": "refinesTo", "to": "req-002"},
+        {"from": "need-001", "kind": "hasValidationQuestion", "to": "val-question-001"}
+      ],
+      "need-002": [
+        {"from": "need-002", "kind": "refinesTo", "to": "req-003"},
+        {"from": "need-002", "kind": "hasValidationQuestion", "to": "val-question-002"}
+      ],
+      "need-003": [
+        {"from": "need-003", "kind": "refinesTo", "to": "req-004"}
+      ],
+      "need-004": [
+        {"from": "need-004", "kind": "refinesTo", "to": "req-005"}
+      ],
+      "verif-001": [
+        {"from": "verif-001", "kind": "verifies", "to": "req-001"}
+      ],
+      "verif-002": [
+        {"from": "verif-002", "kind": "verifies", "to": "req-002"}
+      ],
+      "verif-003": [
+        {"from": "verif-003", "kind": "verifies", "to": "req-003"}
+      ],
+      "val-question-001": [
+        {"from": "val-question-001", "kind": "supportedBy", "to": "val-evidence-001"}
+      ],
+      "val-question-002": [
+        {"from": "val-question-002", "kind": "supportedBy", "to": "val-evidence-002"}
+      ],
+      "agreement-001": [
+        {"from": "agreement-001", "kind": "approves", "to": "need-001"},
+        {"from": "agreement-001", "kind": "approves", "to": "need-002"},
+        {"from": "agreement-001", "kind": "approves", "to": "need-003"},
+        {"from": "agreement-001", "kind": "approves", "to": "need-004"},
+        {"from": "agreement-001", "kind": "approves", "to": "req-001"},
+        {"from": "agreement-001", "kind": "approves", "to": "req-002"},
+        {"from": "agreement-001", "kind": "approves", "to": "req-003"},
+        {"from": "agreement-001", "kind": "approves", "to": "req-004"},
+        {"from": "agreement-001", "kind": "approves", "to": "req-005"}
+      ]
+    },
+    "incoming_edges": {
+      "need-001": [
+        {"from": "stakeholder-001", "kind": "expresses", "to": "need-001"},
+        {"from": "agreement-001", "kind": "approves", "to": "need-001"}
+      ],
+      "need-002": [
+        {"from": "stakeholder-001", "kind": "expresses", "to": "need-002"},
+        {"from": "agreement-001", "kind": "approves", "to": "need-002"}
+      ],
+      "need-003": [
+        {"from": "stakeholder-002", "kind": "expresses", "to": "need-003"},
+        {"from": "agreement-001", "kind": "approves", "to": "need-003"}
+      ],
+      "need-004": [
+        {"from": "stakeholder-003", "kind": "expresses", "to": "need-004"},
+        {"from": "agreement-001", "kind": "approves", "to": "need-004"}
+      ],
+      "req-001": [
+        {"from": "need-001", "kind": "refinesTo", "to": "req-001"},
+        {"from": "verif-001", "kind": "verifies", "to": "req-001"},
+        {"from": "agreement-001", "kind": "approves", "to": "req-001"}
+      ],
+      "req-002": [
+        {"from": "need-001", "kind": "refinesTo", "to": "req-002"},
+        {"from": "verif-002", "kind": "verifies", "to": "req-002"},
+        {"from": "agreement-001", "kind": "approves", "to": "req-002"}
+      ],
+      "req-003": [
+        {"from": "need-002", "kind": "refinesTo", "to": "req-003"},
+        {"from": "verif-003", "kind": "verifies", "to": "req-003"},
+        {"from": "agreement-001", "kind": "approves", "to": "req-003"}
+      ],
+      "req-004": [
+        {"from": "need-003", "kind": "refinesTo", "to": "req-004"},
+        {"from": "agreement-001", "kind": "approves", "to": "req-004"}
+      ],
+      "req-005": [
+        {"from": "need-004", "kind": "refinesTo", "to": "req-005"},
+        {"from": "agreement-001", "kind": "approves", "to": "req-005"}
+      ],
+      "val-question-001": [
+        {"from": "need-001", "kind": "hasValidationQuestion", "to": "val-question-001"}
+      ],
+      "val-question-002": [
+        {"from": "need-002", "kind": "hasValidationQuestion", "to": "val-question-002"}
+      ],
+      "val-evidence-001": [
+        {"from": "val-question-001", "kind": "supportedBy", "to": "val-evidence-001"}
+      ],
+      "val-evidence-002": [
+        {"from": "val-question-002", "kind": "supportedBy", "to": "val-evidence-002"}
+      ]
+    }
+  }
+}

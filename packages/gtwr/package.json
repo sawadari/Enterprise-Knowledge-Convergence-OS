@@ -1,0 +1,21 @@
+{
+  "name": "@ekc/gtwr",
+  "version": "1.0.0",
+  "description": "INCOSE Guide to Writing Requirements plugin for EKC",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "jest"
+  },
+  "keywords": ["ekc", "gtwr", "incose", "requirements"],
+  "license": "MIT",
+  "dependencies": {
+    "@ekc/core": "file:../core"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.9.3"
+  }
+}

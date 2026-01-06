@@ -1,0 +1,86 @@
+query_ui_palette:
+  name: GraphLint Base Query UI Palette
+  version: 2.0.0
+  source_profile: standards/profile.yaml
+  note:
+    - Generated file (checked-in). Do not edit by hand.
+    - Web UI MUST use this file for selectable vocab.
+  generated_from:
+    base: standards/query_ui_palette.yaml
+    overlays: []
+  purpose: |
+    Controls vocabulary exposure in UI.
+    U2 mode: Selection-only, no free text for vocabulary.
+  selectable:
+    node_kinds:
+      - Need
+      - Requirement
+      - Stakeholder
+      - ValidationQuestion
+      - ValidationEvidence
+      - VerificationCase
+      - Agreement
+      - Block
+      - Component
+      - Function
+      - Port
+      - ConOps
+      - OpsCon
+    edge_kinds:
+      - refinesTo
+      - verifies
+      - hasValidationQuestion
+      - supportedBy
+      - approves
+      - expresses
+      - contextualizes
+      - decompose
+      - partOf
+      - allocate
+      - connect
+      - trace
+      - hasPort
+    ui_edge_policy:
+      ui_touchable:
+        - refinesTo
+        - verifies
+        - hasValidationQuestion
+        - supportedBy
+        - expresses
+        - contextualizes
+        - decompose
+        - partOf
+        - allocate
+        - connect
+        - trace
+        - hasPort
+      backend_only:
+        - approves
+    paths_attrs:
+      - id
+      - kind
+      - attrs.statement
+      - attrs.stakeholder_ref
+      - attrs.confidence
+      - attrs.priority
+      - attrs.status
+      - attrs.verification_method
+      - attrs.scope
+      - attrs.decision
+      - attrs.question
+      - attrs.evidence_type
+  operators:
+    - equals
+    - contains
+    - in
+    - exists
+    - hasEdge
+    - degree
+    - gt
+    - lt
+    - gte
+    - lte
+  constraints:
+    - No unbounded recursion
+    - No multi-hop traversal (use trace explicitly)
+    - Query depth limited to 1-hop

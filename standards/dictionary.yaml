@@ -1,0 +1,165 @@
+# GraphLint Dictionary
+# Version: 2.0.0
+# Unified terminology dictionary for display names and normalization
+
+dictionary:
+  name: "GraphLint Terminology Dictionary"
+  version: "2.0.0"
+  purpose: |
+    UI display names and term normalization.
+    Prevents vocabulary proliferation.
+    Auto-updated by profile compilation.
+
+  terms:
+    - term: Need
+      definition: "Stakeholder expectation (Why). May be unverifiable. Source of truth for 'Why'."
+      category: nrvv
+      layer: needs
+
+    - term: Requirement
+      definition: "Concrete, verifiable obligation (What). Must trace to Need."
+      category: nrvv
+      layer: requirements
+
+    - term: Stakeholder
+      definition: "Person or organization with interests in the system"
+      category: nrvv
+      layer: needs
+
+    - term: ValidationQuestion
+      definition: "Question to be answered to validate a Need"
+      category: nrvv
+      layer: validation
+
+    - term: ValidationEvidence
+      definition: "Evidence supporting answer to ValidationQuestion"
+      category: nrvv
+      layer: validation
+
+    - term: VerificationCase
+      definition: "Test case or verification activity to verify a Requirement"
+      category: nrvv
+      layer: verification
+
+    - term: Agreement
+      definition: "Formal approval or agreement record"
+      category: governance
+      layer: approval
+
+    - term: ConOps
+      definition: "Concept of Operations document"
+      category: context
+      layer: needs
+
+    - term: OpsCon
+      definition: "Operational Concept"
+      category: context
+      layer: needs
+
+    - term: Block
+      definition: "System block (structural element)"
+      category: structure
+      layer: architecture
+
+    - term: Component
+      definition: "System component (structural element)"
+      category: structure
+      layer: architecture
+
+    - term: Function
+      definition: "System function (behavioral element)"
+      category: behavior
+      layer: architecture
+
+    - term: Port
+      definition: "Interface port"
+      category: interface
+      layer: architecture
+
+    - term: refinesTo
+      definition: "T1 standard (Why → What). Need refines into concrete Requirement."
+      category: trace
+      type: edge
+
+    - term: verifies
+      definition: "VerificationCase verifies that Requirement is correctly implemented"
+      category: verification
+      type: edge
+
+    - term: hasValidationQuestion
+      definition: "Need has a validation question to be answered"
+      category: validation
+      type: edge
+
+    - term: supportedBy
+      definition: "ValidationQuestion is supported by ValidationEvidence"
+      category: validation
+      type: edge
+
+    - term: approves
+      definition: "Agreement approves target artifact"
+      category: governance
+      type: edge
+
+    - term: expresses
+      definition: "Stakeholder expresses a Need"
+      category: needs
+      type: edge
+
+    - term: contextualizes
+      definition: "Context document provides context for Need"
+      category: needs
+      type: edge
+
+    - term: decompose
+      definition: "Hierarchical decomposition (parent → child)"
+      category: structure
+      type: edge
+
+    - term: partOf
+      definition: "Containment/belonging (part → whole)"
+      category: structure
+      type: edge
+
+    - term: allocate
+      definition: "Function → Structure allocation"
+      category: architecture
+      type: edge
+
+    - term: connect
+      definition: "Port-to-port connection"
+      category: interface
+      type: edge
+
+    - term: trace
+      definition: "Generic traceability link"
+      category: trace
+      type: edge
+
+    - term: hasPort
+      definition: "Ownership relationship from container to port"
+      category: structure
+      type: edge
+
+  synonyms:
+    - canonical: Need
+      aliases: [Needs, Stakeholder Need, User Need]
+
+    - canonical: Requirement
+      aliases: [Requirements, Req, System Requirement]
+
+    - canonical: Stakeholder
+      aliases: [Stakeholders, User, Customer]
+
+  prohibited_terms:
+    - term: "TBD"
+      reason: "Use explicit uncertainty management (TBDItem in automotive profile)"
+      alternative: "Create Requirement with status=planned and add note"
+
+    - term: "適切"
+      reason: "Ambiguous term (Japanese)"
+      alternative: "Use specific criteria"
+
+    - term: "十分"
+      reason: "Ambiguous term (Japanese)"
+      alternative: "Use quantifiable measure"

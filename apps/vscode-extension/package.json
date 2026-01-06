@@ -1,0 +1,74 @@
+{
+  "name": "ekc-vscode",
+  "displayName": "EKC - Enterprise Knowledge Convergence",
+  "description": "Intent-driven requirements engineering with real-time quality monitoring",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": ["Linters", "Other"],
+  "activationEvents": ["*"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ekc.initializeIntentEngine",
+        "title": "EKC: Initialize Intent Engine",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "ekc.addNode",
+        "title": "EKC: Add Node",
+        "icon": "$(add)"
+      },
+      {
+        "command": "ekc.addNeed",
+        "title": "EKC: Add Need",
+        "icon": "$(lightbulb)"
+      },
+      {
+        "command": "ekc.addRequirement",
+        "title": "EKC: Add Requirement",
+        "icon": "$(file-text)"
+      },
+      {
+        "command": "ekc.showStatistics",
+        "title": "EKC: Show Statistics",
+        "icon": "$(graph-line)"
+      },
+      {
+        "command": "ekc.changeCollaborationMode",
+        "title": "EKC: Change Collaboration Mode",
+        "icon": "$(person)"
+      },
+      {
+        "command": "ekc.evaluateCriteria",
+        "title": "EKC: Evaluate Criteria",
+        "icon": "$(run)"
+      },
+      {
+        "command": "ekc.showCriteriaReport",
+        "title": "EKC: Show Criteria Report",
+        "icon": "$(checklist)"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "clean": "rm -rf out"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@ekc/core": "file:../../packages/core",
+    "@ekc/gtwr": "file:../../packages/gtwr",
+    "@ekc/intent-engine": "file:../../packages/intent-engine",
+    "@ekc/criteria-engine": "file:../../packages/criteria-engine",
+    "jsonc-parser": "^3.3.1"
+  }
+}

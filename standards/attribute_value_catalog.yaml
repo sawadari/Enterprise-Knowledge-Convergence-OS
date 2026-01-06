@@ -1,0 +1,235 @@
+# GraphLint Attribute Value Catalog
+# Version: 2.0.0
+# Defines attribute types, enums, and input policies
+
+attribute_value_catalog:
+  name: "GraphLint Base Attribute Value Catalog"
+  version: "2.0.0"
+  purpose: |
+    Catalog of attribute definitions with value constraints.
+    UI uses this for form generation and validation.
+
+  attributes:
+    # Common attributes
+    id:
+      type: string
+      input_policy: readonly
+      description: "Unique identifier (auto-generated)"
+
+    kind:
+      type: string
+      input_policy: readonly
+      description: "Node or edge type (from schema)"
+
+    # Need attributes
+    stakeholder_ref:
+      type: ref
+      ref_kind: Stakeholder
+      input_policy: selection
+      required_for: [Need]
+      description: "Reference to Stakeholder who expressed this Need"
+
+    lifecycle_context:
+      type: enum
+      values: [development, operation, maintenance, disposal]
+      input_policy: selection
+      required_for: [Need]
+      description: "Lifecycle phase context"
+
+    validation_intent:
+      type: text
+      input_policy: free_text
+      required_for: [Need]
+      description: "Qualitative description of how to validate"
+
+    validation_hint:
+      type: text
+      input_policy: free_text
+      optional_for: [Need]
+      deprecation_warning: "For PoC only. Promote to ValidationQuestion for production."
+      description: "Temporary validation hint"
+
+    confidence:
+      type: number
+      range: [0, 1]
+      input_policy: slider
+      required_for: [Need, Requirement, ValidationEvidence]
+      description: "Confidence score (0-1)"
+
+    # Requirement attributes
+    statement:
+      type: text
+      input_policy: free_text
+      required_for: [Requirement]
+      description: "The requirement statement (use SHALL/SHOULD/MAY)"
+
+    rationale:
+      type: text
+      input_policy: free_text
+      required_for: [Requirement]
+      description: "Why this requirement exists"
+
+    acceptance_criteria:
+      type: text
+      input_policy: free_text
+      required_for: [Requirement]
+      description: "How to know when satisfied"
+
+    verification_method:
+      type: enum
+      values: [test, analysis, inspection, demonstration]
+      input_policy: selection
+      required_for: [Requirement, VerificationCase]
+      description: "TAID verification method"
+
+    # Priority attributes
+    priority:
+      type: enum
+      values: [P0-Critical, P1-High, P2-Medium, P3-Low, must, should, could]
+      input_policy: selection
+      optional_for: [Need, Requirement]
+      description: "Priority level"
+
+    # Status attributes
+    status:
+      type: enum
+      values: [planned, in_progress, passed, failed, blocked, open, answered, deferred]
+      input_policy: selection
+      optional_for: [VerificationCase, ValidationQuestion]
+      description: "Current status"
+
+    # Stakeholder attributes
+    name:
+      type: text
+      input_policy: free_text
+      required_for: [Stakeholder]
+      description: "Stakeholder name or role"
+
+    stakeholder_type:
+      type: enum
+      values: [operator, customer, maintainer, regulator, developer]
+      input_policy: selection
+      required_for: [Stakeholder]
+      description: "Type of stakeholder"
+
+    # ValidationQuestion attributes
+    question:
+      type: text
+      input_policy: free_text
+      required_for: [ValidationQuestion]
+      description: "The validation question to be answered"
+
+    # ValidationEvidence attributes
+    evidence_type:
+      type: enum
+      values: [document, prototype, user_feedback, analysis, simulation]
+      input_policy: selection
+      required_for: [ValidationEvidence]
+      description: "Type of evidence"
+
+    description:
+      type: text
+      input_policy: free_text
+      required_for: [ValidationEvidence, ConOps, OpsCon]
+      description: "Description"
+
+    # Agreement attributes
+    scope:
+      type: enum
+      values: [baseline, delta, exception]
+      input_policy: selection
+      required_for: [Agreement, ConOps, OpsCon]
+      description: "Scope of agreement or document"
+
+    decision:
+      type: enum
+      values: [approved, rejected, deferred, conditional]
+      input_policy: selection
+      required_for: [Agreement]
+      description: "Decision made"
+
+    approver_ref:
+      type: ref
+      ref_kind: Stakeholder
+      input_policy: selection
+      required_for: [Agreement]
+      description: "Who approved"
+
+    timestamp:
+      type: datetime
+      input_policy: datetime_picker
+      required_for: [Agreement]
+      description: "When approved"
+
+    conditions:
+      type: text
+      input_policy: free_text
+      optional_for: [Agreement]
+      description: "Conditions for conditional approval"
+
+    # Anchor attributes
+    source_anchor:
+      type: anchor_ref
+      input_policy: anchor_picker
+      required_for: [Need, Requirement, ValidationEvidence, ConOps, OpsCon]
+      description: "Reference to original source (document, meeting, etc)"
+
+    # VerificationCase attributes
+    pass_criteria:
+      type: text
+      input_policy: free_text
+      required_for: [VerificationCase]
+      description: "Criteria for passing verification"
+
+    test_procedure_ref:
+      type: anchor_ref
+      input_policy: anchor_picker
+      optional_for: [VerificationCase]
+      description: "Reference to detailed test procedure"
+
+    actual_result:
+      type: text
+      input_policy: free_text
+      optional_for: [VerificationCase]
+      description: "Actual result from verification execution"
+
+    # Risk
+    risk:
+      type: enum
+      values: [low, medium, high]
+      input_policy: selection
+      optional_for: [Need]
+      description: "Risk level if not satisfied"
+
+    # Category
+    category:
+      type: enum
+      values: [functional, performance, safety, security, usability]
+      input_policy: selection
+      optional_for: [Requirement]
+      description: "Requirement category"
+
+  input_policies:
+    free_text:
+      description: "Free text input (textarea)"
+      validation: "No vocabulary restrictions"
+
+    selection:
+      description: "Dropdown selection from enum values"
+      validation: "Must be one of defined values"
+
+    slider:
+      description: "Slider for numeric input"
+      validation: "Must be within defined range"
+
+    datetime_picker:
+      description: "Date and time picker"
+      validation: "Must be valid ISO 8601 datetime"
+
+    anchor_picker:
+      description: "Reference to source document/location"
+      validation: "Must reference valid anchor"
+
+    readonly:
+      description: "Cannot be edited by user"
+      validation: "System-managed"

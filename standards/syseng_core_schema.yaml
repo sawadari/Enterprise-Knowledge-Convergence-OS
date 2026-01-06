@@ -1,0 +1,67 @@
+# GraphLint System Engineering Core Schema Extension
+# Version: 2.0.0
+# General purpose structure/design/trace vocabulary (INCOSE/MBSE foundation)
+
+syseng_core_schema:
+  name: "SysEng Core Schema Extension"
+  version: "2.0.0"
+  purpose: |
+    Provides generic structural and traceability relationships.
+    Based on INCOSE/MBSE best practices.
+    Core schema.yaml stays minimal; decompose/partOf/allocate/connect/trace are provided here.
+
+  edge_kinds_extension:
+    decompose:
+      from: ["Block", "Component", "Function"]
+      to: ["Block", "Component", "Function"]
+      semantics: "Hierarchical decomposition (parent → child)"
+      cardinality: "0..*"
+      note: "Used for hierarchical breakdown of system elements"
+
+    partOf:
+      from: ["Port", "Block", "Component"]
+      to: ["Block", "Component"]
+      semantics: "Containment/belonging (part → whole)"
+      cardinality: "0..*"
+      note: "Inverse of composition relationship"
+
+    allocate:
+      from: "Function"
+      to: ["Component", "Block"]
+      semantics: "Function → Structure allocation (Function → Component/Block)"
+      cardinality: "0..*"
+      note: "Maps functional architecture to physical architecture"
+
+    connect:
+      from: "Port"
+      to: "Port"
+      semantics: "Port-to-port connection (Port → Port)"
+      cardinality: "0..*"
+      note: "Represents interface connections"
+
+    trace:
+      from:
+        - "Need"
+        - "Requirement"
+        - "ValidationQuestion"
+        - "VerificationCase"
+        - "ValidationEvidence"
+        - "Agreement"
+        - "Function"
+        - "Component"
+        - "Block"
+        - "Port"
+      to:
+        - "Need"
+        - "Requirement"
+        - "ValidationQuestion"
+        - "VerificationCase"
+        - "ValidationEvidence"
+        - "Agreement"
+        - "Function"
+        - "Component"
+        - "Block"
+        - "Port"
+      semantics: "Generic trace (1-hop, semantics defined by dictionary/usage)"
+      cardinality: "0..*"
+      note: "Generic traceability link when specific relationship is not defined"

@@ -1,0 +1,35 @@
+# GraphLint Core Schema (EKC-OS aligned)
+# Version: 2.0.0
+# This is the minimal core schema for GraphLint
+# Extensions are provided via profile packs
+
+version: "2.0.0"
+
+meta:
+  name: "GraphLint Core Schema"
+  purpose: |
+    Minimal core vocabulary for graph-based knowledge modeling.
+    Domain-specific extensions are loaded via profile system.
+
+# Minimal core node kinds
+node_kinds:
+  - Port
+  - Block
+  - Component
+  - Function
+
+# Minimal core edge kinds
+edge_kinds:
+  - hasPort
+
+# Edge definitions with cardinality and semantics
+edge_definitions:
+  hasPort:
+    from:
+      - Block
+      - Component
+      - Function
+    to:
+      - Port
+    cardinality: "0..*"
+    semantics: "Ownership relationship from container to port"

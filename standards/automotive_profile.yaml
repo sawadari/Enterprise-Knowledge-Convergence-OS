@@ -1,0 +1,148 @@
+# GraphLint Automotive Profile Configuration
+# Version: 2.0.0
+#
+# Combines:
+# - ISO 26262 (Functional Safety)
+# - ASPICE (Process Assessment)
+# - Base GraphLint schemas
+
+profile:
+  name: "GraphLint Automotive Profile"
+  version: "2.0.0"
+  description: "ISO 26262 and ASPICE compliant requirements management profile"
+
+  # Include base schemas + automotive extensions
+  includes:
+    # Base schemas
+    - "standards/schema.yaml"                      # Minimal core
+    - "standards/syseng_core_schema.yaml"          # SysEng edges
+    - "standards/nrvv_needs_schema.yaml"           # NRVV Needs layer
+    - "standards/nrvv_vv_schema.yaml"              # NRVV V&V layer
+
+    # Automotive-specific
+    - "standards/automotive_iso26262_schema.yaml"  # ISO 26262 types
+
+  # Criteria rules for automotive compliance
+  criteria:
+    - "checks/criteria/nrvv_validation.yaml"       # Base NRVV rules
+    - "checks/criteria/automotive_aspice.yaml"     # ASPICE + ISO 26262 rules
+
+  # Quality gate thresholds (stricter for automotive)
+  quality_gate:
+    baseline:
+      min_quality_score: 90              # 90% (stricter than default 80%)
+      max_fail: 0                        # No errors allowed
+      max_warn: 3                        # Max 3 warnings
+    delta:
+      max_fail_increase: 0               # No new errors
+      max_warn_increase: 1               # Max 1 new warning
+
+  # Compilation outputs
+  compile:
+    output_dir: "standards/compiled"
+    effective_schema: "automotive_effective_schema.yaml"
+    ui_palette: "automotive_query_ui_palette.yaml"
+    attribute_catalog: "automotive_attribute_value_catalog.yaml"
+    dictionary: "automotive_dictionary.yaml"
+
+# Automotive-specific UI Configuration
+ui:
+  query_ui_palette:
+    node_kinds:
+      # ISO 26262 nodes
+      - ItemDefinition
+      - HazardAnalysisRiskAssessment
+      - SafetyGoal
+      - FunctionalSafetyConcept
+      - TechnicalSafetyRequirement
+      - HardwareSafetyRequirement
+      - SoftwareSafetyRequirement
+      - SystemDesign
+      - HardwareDesign
+      - SoftwareArchitecturalDesign
+      - SoftwareUnit
+      - VerificationReport
+      - ValidationReport
+      - SafetyCase
+
+    edge_kinds:
+      - derivedFrom
+      - refines
+      - allocatesTo
+      - verifies
+      - validates
+      - mitigates
+      - decomposes
+      - implements
+
+  attribute_value_catalog:
+    asil:
+      type: select
+      options:
+        - label: "QM (Quality Managed)"
+          value: "QM"
+        - label: "ASIL A (Lowest)"
+          value: "A"
+        - label: "ASIL B"
+          value: "B"
+        - label: "ASIL C"
+          value: "C"
+        - label: "ASIL D (Highest)"
+          value: "D"
+      default: "QM"
+
+    verification_method:
+      type: select
+      options:
+        - label: "Test"
+          value: "test"
+        - label: "Analysis"
+          value: "analysis"
+        - label: "Inspection"
+          value: "inspection"
+        - label: "Review"
+          value: "review"
+
+    work_product_status:
+      type: select
+      options:
+        - label: "Draft"
+          value: "draft"
+        - label: "In Review"
+          value: "review"
+        - label: "Approved"
+          value: "approved"
+        - label: "Released"
+          value: "released"
+
+    lifecycle_phase:
+      type: select
+      options:
+        - label: "Concept Phase (Part 3)"
+          value: "concept"
+        - label: "System Level (Part 4)"
+          value: "system"
+        - label: "Hardware Level (Part 5)"
+          value: "hardware"
+        - label: "Software Level (Part 6)"
+          value: "software"
+        - label: "Integration & Test (Part 7)"
+          value: "integration"
+        - label: "Validation (Part 4)"
+          value: "validation"
+
+# Dictionary for automotive terms
+dictionary:
+  SafetyGoal: "High-level safety requirement derived from hazard analysis (ISO 26262 Part 3)"
+  ASIL: "Automotive Safety Integrity Level: risk classification (QM, A, B, C, D)"
+  HARA: "Hazard Analysis and Risk Assessment: systematic identification of hazards"
+  TSR: "Technical Safety Requirement: system-level safety requirement (ISO 26262 Part 4)"
+  HSR: "Hardware Safety Requirement: hardware-level safety requirement (ISO 26262 Part 5)"
+  SSR: "Software Safety Requirement: software-level safety requirement (ISO 26262 Part 6)"
+  SPFM: "Single-Point Fault Metric: measure of hardware architectural coverage"
+  LFM: "Latent Fault Metric: measure of latent fault detection"
+  PMHF: "Probabilistic Metric for random Hardware Failures: failure rate target"
+  ASPICE: "Automotive SPICE: process capability assessment model"
+  SYS2: "ASPICE Process: System Requirements Analysis"
+  SWE1: "ASPICE Process: Software Requirements Analysis"
+  TCL: "Tool Confidence Level: classification of software tool trust"
